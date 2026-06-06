@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>月隐塔罗 · 专业占卜师</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cinzel+Decorative:wght@400;700&family=Noto+Serif+SC:wght@300;400;600&family=Noto+Sans+SC:wght@300;400&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --ink:       #0d1117;
+  --ink-deep:  #060a0e;
+  --forest:    #0f2318;
+  --emerald:   #1a3d28;
+  --sage:      #2e5c40;
+  --gold:      #b8924a;
+  --gold-lt:   #d4b06a;
+  --gold-pale: #eddcb0;
+  --ivory:     #f7f2e8;
+  --ivory-dk:  #ede5d4;
+  --text-dk:   #1a1208;
+  --text-md:   #5a4a2a;
+  --text-lt:   #9a8660;
+  --cream-card:#faf6ee;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Noto Sans SC',sans-serif;
+  background:var(--ivory);
+  color:var(--text-dk);
+  overflow-x:hidden;
+  cursor:none;
+}
+
+/* ── CURSOR ── */
+#cur{position:fixed;width:8px;height:8px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform .12s;}
+#cur-r{position:fixed;width:30px;height:30px;border:1px solid var(--gold);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:left .28s cubic-bezier(.25,.46,.45,.94),top .28s cubic-bezier(.25,.46,.45,.94);}
+
+/* ── SCROLL PROGRESS ── */
+#prog{position:fixed;top:0;left:0;height:2px;background:linear-gradient(to right,var(--gold),var(--gold-lt));z-index:300;transition:width .1s;}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;width:100%;z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:22px 60px;
+  background:linear-gradient(to bottom,rgba(6,10,14,.95) 0%,transparent 100%);
+  backdrop-filter:blur(8px);
+}
+.nav-brand{
+  font-family:'Cinzel Decorative',serif;
+  font-size:1.1rem;color:var(--gold);letter-spacing:.08em;
+}
+.nav-links{display:flex;gap:38px;list-style:none;}
+.nav-links a{
+  font-size:.68rem;letter-spacing:.25em;text-transform:uppercase;
+  color:rgba(212,176,106,.7);text-decoration:none;
+  transition:color .25s;position:relative;
+}
+.nav-links a::after{content:'';position:absolute;bottom:-3px;left:0;width:0;height:1px;background:var(--gold);transition:width .3s;}
+.nav-links a:hover{color:var(--gold-lt);}
+.nav-links a:hover::after{width:100%;}
+
+/* ── HERO ── */
+#hero{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  text-align:center;background:var(--ink-deep);position:relative;overflow:hidden;
+}
+.hero-bg{position:absolute;inset:0;z-index:0;}
+.hero-bg::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 40%,rgba(26,61,40,.7) 0%,transparent 65%),
+    radial-gradient(ellipse 40% 40% at 20% 70%,rgba(184,146,74,.08) 0%,transparent 55%),
+    radial-gradient(ellipse 30% 30% at 80% 20%,rgba(184,146,74,.06) 0%,transparent 50%);
+}
+/* Art Deco geometric lines SVG bg */
+.hero-bg::after{
+  content:'';position:absolute;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cpath d='M40 0 L80 40 L40 80 L0 40 Z' fill='none' stroke='%23b8924a' stroke-width='.15' stroke-opacity='.18'/%3E%3C/svg%3E");
+  background-size:80px 80px;
+  opacity:.5;
+}
+.hero-inner{position:relative;z-index:1;max-width:720px;padding:0 24px;}
+.hero-deco-line{
+  display:flex;align-items:center;justify-content:center;gap:18px;
+  margin-bottom:36px;animation:fadeUp .8s ease both;
+}
+.hero-deco-line span{width:60px;height:1px;background:linear-gradient(to right,transparent,var(--gold));}
+.hero-deco-line span:last-child{transform:scaleX(-1);}
+.hero-deco-line em{font-style:normal;font-size:.62rem;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);font-family:'Cinzel',serif;}
+.hero-title{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(2.4rem,6vw,4.8rem);
+  font-weight:400;color:var(--ivory);line-height:1.15;
+  animation:fadeUp .9s .1s ease both;
+}
+.hero-title .sub{display:block;font-family:'Noto Serif SC',serif;font-size:clamp(.95rem,2vw,1.2rem);font-weight:300;color:var(--gold-lt);letter-spacing:.35em;margin-top:18px;}
+.hero-desc{
+  margin-top:28px;font-family:'Noto Serif SC',serif;
+  font-size:.92rem;line-height:2.1;color:rgba(237,220,176,.55);font-weight:300;
+  animation:fadeUp 1s .22s ease both;
+}
+.hero-cta{margin-top:50px;display:flex;gap:18px;justify-content:center;flex-wrap:wrap;animation:fadeUp 1s .38s ease both;}
+.btn-gold{
+  display:inline-block;padding:15px 42px;
+  background:var(--gold);color:var(--ink-deep);
+  font-family:'Cinzel',serif;font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;
+  text-decoration:none;border:none;cursor:none;transition:all .3s;font-weight:600;
+}
+.btn-gold:hover{background:var(--gold-lt);transform:translateY(-2px);box-shadow:0 8px 30px rgba(184,146,74,.3);}
+.btn-outline{
+  display:inline-block;padding:15px 42px;
+  border:1px solid rgba(184,146,74,.45);color:var(--gold-lt);
+  font-family:'Cinzel',serif;font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;
+  text-decoration:none;cursor:none;transition:all .3s;
+}
+.btn-outline:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-2px);}
+
+/* hero card fan */
+.hero-cards{
+  position:absolute;right:7vw;bottom:0;display:flex;align-items:flex-end;gap:-10px;
+  animation:fadeIn 1.4s .6s ease both;z-index:1;
+}
+.h-card{
+  width:68px;height:120px;border:1px solid rgba(184,146,74,.3);
+  background:linear-gradient(160deg,rgba(26,61,40,.8),rgba(6,10,14,.9));
+  position:relative;overflow:hidden;
+}
+.h-card::before{content:'';position:absolute;inset:6px;border:1px solid rgba(184,146,74,.15);}
+.h-card:nth-child(1){transform:rotate(-12deg) translateY(20px);}
+.h-card:nth-child(2){transform:rotate(-4deg) translateY(8px);}
+.h-card:nth-child(3){transform:rotate(4deg) translateY(4px);}
+.h-card:nth-child(4){transform:rotate(12deg) translateY(16px);}
+
+/* ── SHARED SECTION STYLES ── */
+section{padding:96px 10vw;}
+.sec-label{
+  font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.4em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:14px;display:flex;align-items:center;gap:14px;
+}
+.sec-label::before{content:'◆';font-size:.5rem;}
+.sec-heading{
+  font-family:'Cinzel',serif;
+  font-size:clamp(1.8rem,3.5vw,2.8rem);
+  font-weight:600;color:var(--ink);line-height:1.2;
+}
+.sec-heading em{color:var(--gold);font-style:normal;}
+.gold-rule{width:56px;height:1px;background:var(--gold);margin:28px 0;}
+
+/* ── ABOUT ── */
+#about{background:var(--ivory);display:grid;grid-template-columns:5fr 6fr;gap:80px;align-items:center;}
+.about-portrait{position:relative;}
+.portrait-frame{
+  aspect-ratio:3/4;
+  background:linear-gradient(145deg,var(--forest),var(--ink));
+  position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;
+}
+.portrait-frame::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cpath d='M30 5 L55 30 L30 55 L5 30 Z' fill='none' stroke='%23b8924a' stroke-width='.3' stroke-opacity='.2'/%3E%3C/svg%3E") repeat;opacity:.6;}
+.portrait-glyph{font-size:7rem;color:rgba(184,146,74,.2);font-family:'Cinzel Decorative',serif;z-index:1;}
+.portrait-border-deco{position:absolute;top:18px;left:18px;right:-18px;bottom:-18px;border:1px solid var(--gold);z-index:-1;opacity:.5;}
+.portrait-corner{position:absolute;bottom:-20px;right:-20px;width:96px;height:96px;background:var(--gold);display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--ink-deep);}
+.portrait-corner .big{font-family:'Cinzel',serif;font-size:1.9rem;font-weight:700;line-height:1;}
+.portrait-corner .sm{font-size:.52rem;letter-spacing:.12em;text-transform:uppercase;margin-top:4px;}
+.about-body p{font-family:'Noto Serif SC',serif;font-size:.92rem;line-height:2.15;color:var(--text-md);margin-bottom:16px;font-weight:300;}
+.about-tags{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px;}
+.tag{padding:6px 16px;border:1px solid rgba(184,146,74,.35);font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);font-family:'Cinzel',serif;}
+
+/* ── PROCESS ── */
+#process{background:var(--ink-deep);position:relative;overflow:hidden;}
+#process::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cpath d='M40 0 L80 40 L40 80 L0 40 Z' fill='none' stroke='%23b8924a' stroke-width='.15' stroke-opacity='.12'/%3E%3C/svg%3E") repeat;background-size:80px 80px;}
+#process .sec-label{color:var(--gold);}
+#process .sec-heading{color:var(--ivory);}
+.process-intro{font-family:'Noto Serif SC',serif;font-size:.88rem;line-height:2.1;color:rgba(237,220,176,.5);max-width:540px;font-weight:300;margin-bottom:64px;}
+.process-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:2px;position:relative;z-index:1;}
+.step{
+  padding:44px 32px;
+  background:rgba(15,35,24,.6);border:1px solid rgba(184,146,74,.18);
+  position:relative;transition:border-color .3s,transform .3s;
+}
+.step:hover{border-color:rgba(184,146,74,.55);transform:translateY(-5px);}
+.step-num{
+  font-family:'Cinzel Decorative',serif;font-size:2.8rem;font-weight:400;
+  color:rgba(184,146,74,.18);line-height:1;margin-bottom:20px;
+  display:block;
+}
+.step-title{font-family:'Cinzel',serif;font-size:.95rem;font-weight:600;color:var(--gold-lt);margin-bottom:14px;letter-spacing:.06em;}
+.step-desc{font-size:.82rem;line-height:1.9;color:rgba(237,220,176,.5);}
+.step-deco{position:absolute;top:20px;right:20px;font-size:1.4rem;opacity:.2;}
+
+/* ── PRICING ── */
+#pricing{background:var(--ivory-dk);}
+.pricing-intro{font-family:'Noto Serif SC',serif;font-size:.88rem;line-height:2.1;color:var(--text-md);max-width:560px;font-weight:300;margin-bottom:56px;}
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:24px;}
+.p-card{
+  background:var(--cream-card);border:1px solid rgba(184,146,74,.2);
+  padding:44px 36px;position:relative;overflow:hidden;
+  transition:transform .3s,box-shadow .3s;
+}
+.p-card:hover{transform:translateY(-6px);box-shadow:0 24px 60px rgba(184,146,74,.1);}
+.p-card.star{border-color:var(--gold);}
+.p-card.star::after{content:'推荐';position:absolute;top:18px;right:18px;padding:4px 12px;background:var(--gold);color:var(--ink-deep);font-size:.58rem;letter-spacing:.18em;font-family:'Cinzel',serif;}
+.p-icon{font-size:1.8rem;margin-bottom:20px;display:block;}
+.p-name{font-family:'Cinzel',serif;font-size:1.05rem;font-weight:600;color:var(--ink);margin-bottom:8px;letter-spacing:.05em;}
+.p-price{font-family:'Cinzel',serif;font-size:2.6rem;font-weight:700;color:var(--gold);line-height:1;}
+.p-price sup{font-size:1rem;vertical-align:top;margin-top:10px;display:inline-block;}
+.p-price .per{font-size:.8rem;color:var(--text-lt);font-family:'Noto Sans SC',sans-serif;font-weight:300;}
+.p-divider{width:40px;height:1px;background:var(--gold);margin:20px 0;opacity:.5;}
+.p-desc{font-size:.82rem;line-height:1.9;color:var(--text-md);margin-bottom:18px;}
+.p-list{list-style:none;}
+.p-list li{font-size:.78rem;color:var(--text-lt);padding:5px 0;display:flex;align-items:center;gap:10px;}
+.p-list li::before{content:'◈';color:var(--gold);font-size:.55rem;}
+
+/* ── NOTES ── */
+#notes{background:var(--forest);position:relative;overflow:hidden;}
+#notes::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 50%,rgba(46,92,64,.4),transparent);}
+#notes .sec-label{color:var(--gold);}
+#notes .sec-heading{color:var(--ivory);}
+#notes .gold-rule{opacity:.6;}
+.notes-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2px;margin-top:0;position:relative;z-index:1;}
+.note-item{
+  padding:36px 32px;background:rgba(6,10,14,.35);border:1px solid rgba(184,146,74,.15);
+  transition:background .3s;
+}
+.note-item:hover{background:rgba(6,10,14,.55);}
+.note-icon{font-size:1.5rem;margin-bottom:16px;display:block;}
+.note-title{font-family:'Cinzel',serif;font-size:.88rem;font-weight:600;color:var(--gold-lt);margin-bottom:12px;letter-spacing:.06em;}
+.note-text{font-size:.8rem;line-height:1.9;color:rgba(237,220,176,.55);}
+
+/* ── KNOWLEDGE ── */
+#knowledge{background:var(--ivory);}
+.know-top{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:56px;flex-wrap:wrap;gap:20px;}
+.btn-add{
+  display:inline-flex;align-items:center;gap:8px;padding:12px 26px;
+  border:1px solid var(--gold);color:var(--gold);background:transparent;
+  font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;
+  cursor:none;transition:all .3s;
+}
+.btn-add:hover{background:var(--gold);color:var(--ink-deep);}
+.articles-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px;}
+.art-card{
+  background:var(--cream-card);border:1px solid rgba(184,146,74,.15);
+  overflow:hidden;transition:transform .3s,box-shadow .3s;
+  position:relative;
+}
+.art-card:hover{transform:translateY(-5px);box-shadow:0 18px 50px rgba(184,146,74,.1);}
+.art-card-stripe{height:3px;background:linear-gradient(to right,var(--gold),var(--gold-lt));}
+.art-card-body{padding:30px;}
+.art-tag{font-size:.58rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);font-family:'Cinzel',serif;margin-bottom:12px;}
+.art-title{font-family:'Noto Serif SC',serif;font-size:1rem;font-weight:600;color:var(--ink);line-height:1.6;margin-bottom:12px;}
+.art-excerpt{font-size:.8rem;color:var(--text-lt);line-height:1.85;}
+.art-footer{display:flex;justify-content:space-between;align-items:center;margin-top:22px;padding-top:18px;border-top:1px solid rgba(184,146,74,.1);}
+.art-date{font-size:.68rem;color:var(--text-lt);letter-spacing:.06em;}
+.art-more{font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-family:'Cinzel',serif;cursor:none;transition:letter-spacing .2s;border:none;background:none;}
+.art-more:hover{letter-spacing:.28em;}
+
+/* ── CONTACT ── */
+#contact{
+  background:var(--ink-deep);
+  display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;
+  position:relative;overflow:hidden;
+}
+#contact::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cpath d='M40 0 L80 40 L40 80 L0 40 Z' fill='none' stroke='%23b8924a' stroke-width='.15' stroke-opacity='.1'/%3E%3C/svg%3E") repeat;background-size:80px 80px;}
+#contact .sec-label{color:var(--gold);}
+#contact .sec-heading{color:var(--ivory);}
+.contact-text{position:relative;z-index:1;}
+.contact-text p{font-family:'Noto Serif SC',serif;font-size:.88rem;line-height:2.1;color:rgba(237,220,176,.5);font-weight:300;margin-bottom:44px;}
+.c-items{display:flex;flex-direction:column;gap:26px;}
+.c-item{display:flex;gap:18px;align-items:flex-start;}
+.c-icon{width:42px;height:42px;border:1px solid rgba(184,146,74,.3);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;color:var(--gold);}
+.c-lbl{font-size:.58rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;font-family:'Cinzel',serif;}
+.c-val{font-size:.88rem;color:rgba(237,220,176,.75);line-height:1.7;}
+.contact-aside{position:relative;z-index:1;}
+.contact-box{
+  border:1px solid rgba(184,146,74,.25);padding:44px;
+  background:rgba(15,35,24,.4);
+}
+.contact-box h3{font-family:'Cinzel',serif;font-size:1.1rem;font-weight:600;color:var(--gold-lt);margin-bottom:28px;letter-spacing:.06em;}
+.fgroup{margin-bottom:22px;}
+.fgroup label{display:block;font-size:.6rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(237,220,176,.45);margin-bottom:9px;font-family:'Cinzel',serif;}
+.fgroup input,.fgroup textarea,.fgroup select{
+  width:100%;padding:13px 15px;
+  background:rgba(237,220,176,.04);border:1px solid rgba(184,146,74,.2);
+  color:rgba(237,220,176,.85);font-family:'Noto Sans SC',sans-serif;font-size:.85rem;
+  outline:none;transition:border-color .2s;cursor:none;
+}
+.fgroup input:focus,.fgroup textarea:focus,.fgroup select:focus{border-color:var(--gold);}
+.fgroup textarea{min-height:110px;resize:vertical;line-height:1.7;}
+.fgroup select option{background:var(--ink);}
+.fgroup input::placeholder,.fgroup textarea::placeholder{color:rgba(184,146,74,.3);}
+.btn-send{width:100%;padding:15px;background:var(--gold);color:var(--ink-deep);border:none;font-family:'Cinzel',serif;font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;cursor:none;transition:background .3s;font-weight:600;}
+.btn-send:hover{background:var(--gold-lt);}
+
+/* ── FOOTER ── */
+footer{
+  background:var(--ink-deep);border-top:1px solid rgba(184,146,74,.15);
+  padding:36px 10vw;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;
+}
+.f-brand{font-family:'Cinzel Decorative',serif;font-size:.95rem;color:var(--gold);letter-spacing:.1em;}
+.f-copy{font-size:.65rem;color:rgba(184,146,74,.35);letter-spacing:.08em;}
+.f-deco{font-size:.8rem;color:rgba(184,146,74,.25);}
+
+/* ── MODALS ── */
+.m-overlay{
+  display:none;position:fixed;inset:0;z-index:600;
+  background:rgba(6,10,14,.92);backdrop-filter:blur(10px);
+  align-items:center;justify-content:center;
+}
+.m-overlay.open{display:flex;}
+.m-box{
+  background:var(--cream-card);width:min(640px,93vw);
+  max-height:90vh;overflow-y:auto;padding:52px 46px;
+  position:relative;animation:mIn .32s ease;
+}
+.m-box.dark{background:var(--ink);}
+.m-close{position:absolute;top:18px;right:22px;background:none;border:none;cursor:none;font-size:1.3rem;color:var(--text-lt);line-height:1;}
+.m-close:hover{color:var(--text-dk);}
+.m-box.dark .m-close{color:rgba(184,146,74,.5);}
+.m-box.dark .m-close:hover{color:var(--gold);}
+.m-title{font-family:'Cinzel',serif;font-size:1.5rem;font-weight:600;color:var(--ink);margin-bottom:28px;letter-spacing:.04em;}
+.m-box.dark .m-title{color:var(--gold-lt);}
+.m-box .fgroup input,.m-box .fgroup textarea,.m-box .fgroup select{
+  background:var(--ivory);border-color:rgba(184,146,74,.3);color:var(--text-dk);
+}
+.m-box .fgroup input::placeholder,.m-box .fgroup textarea::placeholder{color:rgba(90,74,42,.35);}
+.m-box .fgroup label{color:var(--text-lt);}
+.m-box .fgroup input:focus,.m-box .fgroup textarea:focus,.m-box .fgroup select:focus{border-color:var(--gold);}
+.m-box .btn-send{margin-top:8px;}
+
+/* read modal */
+.read-tag{font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;}
+.read-title{font-family:'Noto Serif SC',serif;font-size:1.5rem;font-weight:600;color:var(--gold-lt);line-height:1.5;margin-bottom:10px;}
+.read-meta{font-size:.7rem;color:rgba(184,146,74,.4);margin-bottom:32px;border-bottom:1px solid rgba(184,146,74,.12);padding-bottom:22px;letter-spacing:.05em;}
+.read-body{font-family:'Noto Serif SC',serif;font-size:.9rem;line-height:2.1;color:rgba(237,220,176,.7);font-weight:300;}
+.read-body p{margin-bottom:18px;}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:none;}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+@keyframes mIn{from{opacity:0;transform:translateY(26px) scale(.97);}to{opacity:1;transform:none;}}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .65s ease,transform .65s ease;}
+.reveal.on{opacity:1;transform:none;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:960px){
+  nav{padding:18px 24px;}
+  section{padding:70px 6vw;}
+  #about,#contact{grid-template-columns:1fr;gap:50px;}
+  .hero-cards{display:none;}
+  .m-box{padding:36px 24px;}
+}
+@media(max-width:600px){
+  .nav-links{display:none;}
+  .know-top{flex-direction:column;align-items:flex-start;}
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur-r"></div>
+<div id="prog"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">月隐塔罗</div>
+  <ul class="nav-links">
+    <li><a href="#about">关于我</a></li>
+    <li><a href="#process">占卜流程</a></li>
+    <li><a href="#pricing">收费</a></li>
+    <li><a href="#notes">注意事项</a></li>
+    <li><a href="#knowledge">知识栏</a></li>
+    <li><a href="#contact">联系我</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-inner">
+    <div class="hero-deco-line">
+      <span></span><em>专业塔罗占卜</em><span></span>
+    </div>
+    <h1 class="hero-title">
+      月隐塔罗
+      <span class="sub">L U N A  T A R O T</span>
+    </h1>
+    <p class="hero-desc">
+      七十八张牌，七十八扇门<br>
+      每一次翻牌，都是与内在智慧的一次对话<br>
+      让牌阵为您照亮前路，看见更多可能
+    </p>
+    <div class="hero-cta">
+      <a href="#contact" class="btn-gold">预约占卜</a>
+      <a href="#process" class="btn-outline">了解流程</a>
+    </div>
+  </div>
+  <div class="hero-cards">
+    <div class="h-card"></div>
+    <div class="h-card"></div>
+    <div class="h-card"></div>
+    <div class="h-card"></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-portrait reveal">
+    <div class="portrait-frame">
+      <div class="portrait-glyph">☽</div>
+    </div>
+    <div class="portrait-border-deco"></div>
+    <div class="portrait-corner">
+      <span class="big">6+</span>
+      <span class="sm">年研习</span>
+    </div>
+  </div>
+  <div class="about-body">
+    <div class="sec-label reveal">关于我</div>
+    <h2 class="sec-heading reveal">以牌为镜<br><em>照见你的故事</em></h2>
+    <div class="gold-rule reveal"></div>
+    <p class="reveal">大家好，我是月隐，一名专注于塔罗占卜的独立咨询师。与塔罗结缘于六年前的一次偶然——那副旧牌让我第一次感受到，图像与符号可以触碰到语言无法抵达的地方。</p>
+    <p class="reveal">我系统研习了韦特塔罗、托特塔罗与马赛塔罗三大体系，并将荣格原型心理学融入解牌实践。我相信，牌不预测命运——它呈现的，是此刻你内心深处已经知道的答案。</p>
+    <p class="reveal">迄今已为来自两岸三地的三千余位来访者提供解读服务，涵盖感情、事业、自我成长、重大决策等议题。</p>
+    <div class="about-tags reveal">
+      <span class="tag">韦特塔罗</span>
+      <span class="tag">托特体系</span>
+      <span class="tag">荣格原型</span>
+      <span class="tag">感情牌阵</span>
+      <span class="tag">事业指引</span>
+      <span class="tag">年度牌阵</span>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process">
+  <div class="sec-label reveal">占卜流程</div>
+  <h2 class="sec-heading reveal">每一次解读<br><em>都是一场仪式</em></h2>
+  <div class="gold-rule reveal"></div>
+  <p class="process-intro reveal">从预约到交付，我为每位来访者提供完整、用心的服务体验。以下是完整的占卜流程。</p>
+  <div class="process-steps">
+    <div class="step reveal">
+      <span class="step-num">01</span>
+      <div class="step-deco">🌙</div>
+      <div class="step-title">提交预约</div>
+      <div class="step-desc">通过联系方式告知您希望探询的问题与所选套餐，我将在24小时内确认档期并发送确认信息。</div>
+    </div>
+    <div class="step reveal">
+      <span class="step-num">02</span>
+      <div class="step-deco">✦</div>
+      <div class="step-title">确认问题</div>
+      <div class="step-desc">开始前，我会与您简短沟通，帮助您将问题聚焦与精炼。一个清晰的问题，能让牌阵更有针对性地回应。</div>
+    </div>
+    <div class="step reveal">
+      <span class="step-num">03</span>
+      <div class="step-deco">🃏</div>
+      <div class="step-title">抽牌解读</div>
+      <div class="step-desc">我会在专属的占卜空间进行抽牌，结合牌面意象、位置能量与您的问题背景，进行深度解读。</div>
+    </div>
+    <div class="step reveal">
+      <span class="step-num">04</span>
+      <div class="step-deco">📜</div>
+      <div class="step-title">交付报告</div>
+      <div class="step-desc">解读完成后，您将收到包含牌阵照片、详细文字解读与行动建议的完整报告，以图文形式发送。</div>
+    </div>
+    <div class="step reveal">
+      <span class="step-num">05</span>
+      <div class="step-deco">💬</div>
+      <div class="step-title">答疑跟进</div>
+      <div class="step-desc">报告交付后，提供一次免费文字答疑机会（48小时内），确保您完全理解解读内容。</div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="sec-label reveal">收费方式</div>
+  <h2 class="sec-heading reveal">选择适合您的<br><em>解读方案</em></h2>
+  <div class="gold-rule reveal"></div>
+  <p class="pricing-intro reveal">所有套餐均提供详细的图文解读报告。如有特殊需求或长期合作意向，欢迎私信洽谈。</p>
+  <div class="pricing-grid">
+    <div class="p-card reveal">
+      <span class="p-icon">🌒</span>
+      <div class="p-name">单问牌阵</div>
+      <div class="p-price"><sup>¥</sup>88</div>
+      <div class="p-divider"></div>
+      <div class="p-desc">针对单一问题，3–5张牌，图文解读，适合初次体验或紧急决策参考。</div>
+      <ul class="p-list">
+        <li>3-5张牌阵</li>
+        <li>图文报告</li>
+        <li>一次文字答疑</li>
+        <li>24小时内交付</li>
+      </ul>
+    </div>
+    <div class="p-card star reveal">
+      <span class="p-icon">🌕</span>
+      <div class="p-name">深度解读</div>
+      <div class="p-price"><sup>¥</sup>168</div>
+      <div class="p-divider"></div>
+      <div class="p-desc">凯尔特十字或自定义大牌阵，涵盖问题背景、阻碍、建议与结果，全面深入。</div>
+      <ul class="p-list">
+        <li>10张以上牌阵</li>
+        <li>详细图文报告</li>
+        <li>两次文字答疑</li>
+        <li>48小时内交付</li>
+      </ul>
+    </div>
+    <div class="p-card reveal">
+      <span class="p-icon">☀️</span>
+      <div class="p-name">年度牌阵</div>
+      <div class="p-price"><sup>¥</sup>298</div>
+      <div class="p-divider"></div>
+      <div class="p-desc">12个月逐月解读 + 年度总览，把握全年能量走势，规划关键节点。</div>
+      <ul class="p-list">
+        <li>13张牌阵（12月+总览）</li>
+        <li>逐月图文报告</li>
+        <li>无限次答疑（7天）</li>
+        <li>72小时内交付</li>
+      </ul>
+    </div>
+    <div class="p-card reveal">
+      <span class="p-icon">🌟</span>
+      <div class="p-name">视频解读</div>
+      <div class="p-price"><sup>¥</sup>258<span class="per"> /次</span></div>
+      <div class="p-divider"></div>
+      <div class="p-desc">线上视频实时解读，边看牌边交流，更直观互动，适合复杂议题或深度探索。</div>
+      <ul class="p-list">
+        <li>60分钟视频会议</li>
+        <li>实时互动交流</li>
+        <li>录屏归档可回看</li>
+        <li>协商时间预约</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- NOTES -->
+<section id="notes">
+  <div class="sec-label reveal">注意事项</div>
+  <h2 class="sec-heading reveal">开始之前<br><em>请先了解</em></h2>
+  <div class="gold-rule reveal"></div>
+  <div class="notes-grid">
+    <div class="note-item reveal">
+      <span class="note-icon">🌿</span>
+      <div class="note-title">塔罗的定位</div>
+      <div class="note-text">塔罗是一种自我探索与辅助决策的工具，提供视角与可能性，而非绝对预言。最终的选择与行动权，始终在您手中。</div>
+    </div>
+    <div class="note-item reveal">
+      <span class="note-icon">❓</span>
+      <div class="note-title">问题建议</div>
+      <div class="note-text">建议以开放式提问代替"是否"题，例如"我在感情中需要注意什么"优于"他爱我吗"。聚焦的问题能带来更有价值的解读。</div>
+    </div>
+    <div class="note-item reveal">
+      <span class="note-icon">🔒</span>
+      <div class="note-title">隐私保护</div>
+      <div class="note-text">您提供的所有信息严格保密，不会用于任何商业用途。解读报告不会在未经授权的情况下对外分享。</div>
+    </div>
+    <div class="note-item reveal">
+      <span class="note-icon">⚕️</span>
+      <div class="note-title">医疗与法律</div>
+      <div class="note-text">塔罗不能替代医疗诊断、心理治疗或法律建议。若您正在经历心理危机或健康问题，请优先寻求专业人士帮助。</div>
+    </div>
+    <div class="note-item reveal">
+      <span class="note-icon">👤</span>
+      <div class="note-title">第三方问题</div>
+      <div class="note-text">我接受以自身为中心的第三方相关问题（如"我与某人的关系走向"），但不为他人做"背刺式"占卜，请理解与尊重。</div>
+    </div>
+    <div class="note-item reveal">
+      <span class="note-icon">🔄</span>
+      <div class="note-title">退款说明</div>
+      <div class="note-text">报告交付前如需取消，可全额退款。交付后因个人原因不满意，不提供退款，但欢迎沟通补充解读。</div>
+    </div>
+  </div>
+</section>
+
+<!-- KNOWLEDGE -->
+<section id="knowledge">
+  <div class="know-top">
+    <div>
+      <div class="sec-label reveal">知识栏</div>
+      <h2 class="sec-heading reveal">塔罗<em>小课堂</em></h2>
+      <div class="gold-rule reveal"></div>
+    </div>
+    <div class="reveal">
+      <button class="btn-add" onclick="openAdd()">＋ 发布文章</button>
+    </div>
+  </div>
+  <div class="articles-grid" id="artGrid"></div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-text">
+    <div class="sec-label reveal">联系我</div>
+    <h2 class="sec-heading reveal">准备好了吗<br><em>翻开第一张牌</em></h2>
+    <div class="gold-rule reveal"></div>
+    <p class="reveal">无论您带着什么样的疑惑而来，我都会以认真与尊重接待每一位来访者。欢迎通过以下方式联系预约。</p>
+    <div class="c-items reveal">
+      <div class="c-item">
+        <div class="c-icon">微</div>
+        <div>
+          <div class="c-lbl">微信</div>
+          <div class="c-val">yuyin_tarot</div>
+        </div>
+      </div>
+      <div class="c-item">
+        <div class="c-icon">✉</div>
+        <div>
+          <div class="c-lbl">邮箱</div>
+          <div class="c-val">yuyin@lunatarot.com</div>
+        </div>
+      </div>
+      <div class="c-item">
+        <div class="c-icon">小</div>
+        <div>
+          <div class="c-lbl">小红书</div>
+          <div class="c-val">@月隐塔罗</div>
+        </div>
+      </div>
+      <div class="c-item">
+        <div class="c-icon">◷</div>
+        <div>
+          <div class="c-lbl">接单时间</div>
+          <div class="c-val">每周一至周五 · 10:00 – 22:00<br>周末按档期开放</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="contact-aside reveal">
+    <div class="contact-box">
+      <h3>发送预约请求</h3>
+      <div class="fgroup">
+        <label>您的称呼</label>
+        <input type="text" placeholder="如何称呼您？"/>
+      </div>
+      <div class="fgroup">
+        <label>联系方式</label>
+        <input type="text" placeholder="微信 / 邮箱"/>
+      </div>
+      <div class="fgroup">
+        <label>选择套餐</label>
+        <select>
+          <option value="">请选择</option>
+          <option>单问牌阵 ¥88</option>
+          <option>深度解读 ¥168</option>
+          <option>年度牌阵 ¥298</option>
+          <option>视频解读 ¥258</option>
+        </select>
+      </div>
+      <div class="fgroup">
+        <label>想探询的问题（可选）</label>
+        <textarea placeholder="简单描述您想了解的议题……"></textarea>
+      </div>
+      <button class="btn-send" onclick="alert('感谢您的预约！我将在24小时内与您联系 🌙')">发送预约</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="f-brand">月隐塔罗</div>
+  <div class="f-deco">◆ ◈ ◆</div>
+  <div class="f-copy">© 2025 LUNA TAROT · 保密承诺 · 以牌为镜</div>
+</footer>
+
+<!-- ADD ARTICLE MODAL -->
+<div class="m-overlay" id="addModal">
+  <div class="m-box">
+    <button class="m-close" onclick="closeAdd()">×</button>
+    <div class="m-title">发布新文章</div>
+    <div class="fgroup">
+      <label>文章标题</label>
+      <input type="text" id="inTitle" placeholder="请输入标题"/>
+    </div>
+    <div class="fgroup">
+      <label>文章分类</label>
+      <select id="inTag">
+        <option>塔罗入门</option>
+        <option>牌义解析</option>
+        <option>牌阵教学</option>
+        <option>感情解读</option>
+        <option>事业指引</option>
+        <option>能量日记</option>
+      </select>
+    </div>
+    <div class="fgroup">
+      <label>摘要（选填）</label>
+      <input type="text" id="inExcerpt" placeholder="一句话概括"/>
+    </div>
+    <div class="fgroup">
+      <label>正文内容</label>
+      <textarea id="inBody" style="min-height:180px" placeholder="在此输入正文……"></textarea>
+    </div>
+    <button class="btn-send" onclick="submitArt()">发布文章</button>
+  </div>
+</div>
+
+<!-- READ ARTICLE MODAL -->
+<div class="m-overlay" id="readModal">
+  <div class="m-box dark">
+    <button class="m-close" onclick="closeRead()">×</button>
+    <div class="read-tag" id="rTag"></div>
+    <div class="read-title" id="rTitle"></div>
+    <div class="read-meta" id="rMeta"></div>
+    <div class="read-body" id="rBody"></div>
+  </div>
+</div>
+
+<script>
+/* cursor */
+const cur=document.getElementById('cur'),ring=document.getElementById('cur-r');
+document.addEventListener('mousemove',e=>{
+  cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px';
+  ring.style.left=e.clientX+'px';ring.style.top=e.clientY+'px';
+});
+
+/* scroll progress */
+window.addEventListener('scroll',()=>{
+  const p=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;
+  document.getElementById('prog').style.width=p+'%';
+});
+
+/* reveal */
+const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('on');}),{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+/* articles */
+let arts=[
+  {tag:'塔罗入门',title:'什么是塔罗？一副78张的自我地图',
+   excerpt:'塔罗牌不是算命工具，而是一面镜子——帮你看见自己已知却尚未承认的真相。',
+   body:`塔罗最早出现于15世纪的意大利，最初只是贵族的纸牌游戏。直到18、19世纪，神秘学家开始将其与卡巴拉、占星、炼金术等体系结合，塔罗才逐渐发展为一套系统的象征语言。\n\n标准的韦特塔罗由78张牌组成：22张大阿尔克那（Major Arcana），代表生命中的重大主题与人生原型；56张小阿尔克那（Minor Arcana），细分为四个花色，映射日常生活的各个层面。\n\n我个人喜欢把塔罗比作一部精简的人类经验百科——每一张牌，都凝结着数百年集体智慧对特定处境的深刻洞察。当你在某个人生路口抽到一张牌，它所呈现的意象，往往能精准触碰到你心底最需要被看见的那个角落。\n\n塔罗不预言命运，但它能帮你看清此刻的能量状态，以及不同选择可能带来的走向。`,
+   date:'2025年4月10日'},
+  {tag:'牌义解析',title:'愚者0号：勇气，还是鲁莽？',
+   excerpt:'愚者站在悬崖边缘，笑着迈步。他是最勇敢的人，还是最无知的人？也许，两者都是。',
+   body:`愚者（The Fool），编号为0，在塔罗中拥有特殊的地位——他既是旅程的起点，也是终点，可以出现在任何地方。\n\n牌面上，一个年轻人站在悬崖边缘，肩扛行囊，仰望天空，浑然不觉脚下的深渊。他的姿态轻盈，眼神充满期待——这正是愚者的核心能量：纯粹的出发，不带过去的包袱，对未来充满信任。\n\n正位的愚者象征新开始、天真无畏、对生命的信任与开放。当你在新项目、新关系或重大转变面前抽到正位愚者，宇宙在告诉你：现在是起跳的时候。\n\n逆位时，愚者的能量可能表现为鲁莽、缺乏计划，或相反地——因为过度恐惧而迟迟不敢迈出那一步，错失良机。\n\n愚者教给我们的，是如何在保持觉察的同时，依然愿意信任未知。`,
+   date:'2025年3月22日'},
+  {tag:'牌阵教学',title:'三牌阵：简单却强大的基础牌阵',
+   excerpt:'过去、现在、未来——三张牌，道尽一个问题的来龙去脉。是入门者的首选，也是老手的常用工具。',
+   body:`三牌阵（Three-Card Spread）是塔罗中最经典、应用最广泛的牌阵之一。它简洁而不简单——三个位置，却能揭示问题的时间维度与内在逻辑。\n\n最常见的三牌阵解读方式：\n\n**位置一（左）：过去** 是什么经历、能量或情境，形成了当下的局面？理解过去是看懂现在的基础。\n\n**位置二（中）：现在** 此刻你处于什么状态？正在面临什么核心挑战或机遇？中间牌往往是整个牌阵的核心。\n\n**位置三（右）：未来** 如果当前能量持续，可能走向何方？注意，未来牌呈现的是"可能性"，不是"必然"。\n\n三牌阵还有许多变体，例如：情况-行动-结果、身-心-灵、我-对方-关系等，可根据问题灵活调整。\n\n对于初学者，我强烈建议从三牌阵开始练习，每天为自己抽一组，写下解读日记——这是提升牌感最有效的方式。`,
+   date:'2025年2月8日'}
+];
+
+function renderArts(){
+  const g=document.getElementById('artGrid');g.innerHTML='';
+  arts.forEach((a,i)=>{
+    const d=document.createElement('div');d.className='art-card';
+    d.innerHTML=`<div class="art-card-stripe"></div>
+    <div class="art-card-body">
+      <div class="art-tag">${a.tag}</div>
+      <div class="art-title">${a.title}</div>
+      <div class="art-excerpt">${a.excerpt}</div>
+      <div class="art-footer">
+        <span class="art-date">${a.date}</span>
+        <button class="art-more" onclick="openRead(${i})">阅读全文 →</button>
+      </div>
+    </div>`;
+    g.appendChild(d);obs.observe(d);
+  });
+}
+renderArts();
+
+function openAdd(){document.getElementById('addModal').classList.add('open');}
+function closeAdd(){document.getElementById('addModal').classList.remove('open');}
+function submitArt(){
+  const t=document.getElementById('inTitle').value.trim();
+  const b=document.getElementById('inBody').value.trim();
+  if(!t||!b){alert('请填写标题和正文。');return;}
+  const now=new Date();
+  arts.unshift({
+    tag:document.getElementById('inTag').value,
+    title:t,
+    excerpt:document.getElementById('inExcerpt').value.trim()||b.slice(0,55)+'…',
+    body:b,
+    date:`${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日`
+  });
+  renderArts();closeAdd();
+  ['inTitle','inExcerpt','inBody'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('knowledge').scrollIntoView({behavior:'smooth'});
+}
+
+function openRead(i){
+  const a=arts[i];
+  document.getElementById('rTag').textContent=a.tag;
+  document.getElementById('rTitle').textContent=a.title;
+  document.getElementById('rMeta').textContent=`发布于 ${a.date} · 月隐塔罗`;
+  document.getElementById('rBody').innerHTML=a.body.split('\n').map(p=>p?`<p>${p}</p>`:'').join('');
+  document.getElementById('readModal').classList.add('open');
+}
+function closeRead(){document.getElementById('readModal').classList.remove('open');}
+
+document.getElementById('addModal').addEventListener('click',function(e){if(e.target===this)closeAdd();});
+document.getElementById('readModal').addEventListener('click',function(e){if(e.target===this)closeRead();});
+</script>
+</body>
+</html>
